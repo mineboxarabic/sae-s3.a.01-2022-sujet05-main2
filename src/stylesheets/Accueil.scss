@@ -1,0 +1,486 @@
+.Upper-Bar{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 3px 9px;
+
+    
+
+    .Upper-Bar-Button{
+        margin: 25px 25px 0px 0px;
+        width: 35%;
+        display: flex;
+        justify-content: right;
+        align-self: flex-end;
+
+        
+
+        .btn-Login , .btn-Register{
+            background-color: #FA6466;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+    }
+    
+    .img-Logo{
+        margin: 10px;
+        align-self: center;
+        width: 330px;
+        height: 220px;
+
+        @media screen and (max-width: 400px) {
+            height : 148px;
+            width: 260px;
+        }
+       
+    }
+}
+
+.Middle-Bar{
+    background-image: url(../images/banniere.jpg);
+    background-size: cover;
+    display: flex;
+    width: 100%;
+    border-radius: 0 0 120% 100%/60px;
+    height: 350px;
+
+    @media screen and (max-width: 1220px)  {
+        align-self: center;
+        align-items: center;
+        justify-content: center;
+        flex-direction: center;
+        background-image: url(../images/bannieretel.jpg);
+    }
+
+    .Presentation{
+        margin-top: 50px;
+        margin-left: 10%;
+        width: 29rem;
+        height: 14rem;
+        background-color: #ffffff;
+        border-radius: 4rem;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @media screen and (max-width: 1220px)  {
+            margin-left: 0;
+        }
+
+        @media screen and (max-width: 440px) {
+            height: 19rem;
+            width: 20rem;
+            margin-top: 0;
+        }
+
+        h2{
+            font-size: 25px;
+            margin-bottom: 0px;
+            text-transform : uppercase
+        }
+        .description{
+            margin: 10px 20px 20px 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+    }
+    
+}
+
+.Lower-Bar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10%;
+    .Element-container-PageTypeClass{
+        display: flex;
+        justify-content: center;
+
+        @media screen and (max-width: 768px)  {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .option-Gaz, .option-Elec, .option-Gaz-Elec {
+
+            @media screen and (min-width: 768px) {
+                width : 220px;
+                margin: 10px;
+            }
+
+            @media screen and (max-width: 768px) and (min-width: 400px) {
+                width : 300px;  
+                
+                .label-btn-Elec, .label-btn-Gaz, .label-btn-Gaz-Elec {
+                    height: 250px;
+                }
+            }
+
+            @media screen and (max-width: 400px) {
+                width : 230px;  
+                
+                .label-btn-Elec, .label-btn-Gaz, .label-btn-Gaz-Elec {
+                    height: 220px;
+                }
+            }
+
+        }
+    }
+    .Element-container-PageFiltre{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .listItemsClientsType{
+            margin: 20px;
+            display: flex;
+
+            @media screen and (max-width: 400px) {
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .itemListeclients{
+                margin: 10px;
+
+                @media screen and (max-width: 400px) {
+                    margin: 20px;
+                }
+
+                .btn-clients{
+                    display:none;
+                }
+                .label-btn-clients{
+                    padding: 8px;
+                    border: 2px solid #FA6466;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    transition: .5s;
+                }
+                .btn-clients:checked +.label-btn-clients{
+                    background-color: #FA6466;
+                    box-shadow: lightgray 10px 10px 20px;
+                    transition: .5s;
+                }
+            }
+        }
+        .listItemsFiltres{
+            margin: 20px;
+            width: 60%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            .itemListeFiltres{
+                margin: 10px;
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                .btn-Filtres{
+                    display:none;
+                }
+                .label-btn-Filtres{
+                    padding: 8px;
+                    border: 2px solid #FA6466;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    transition: .5s;
+                }
+                .btn-Filtres:checked +.label-btn-Filtres{
+                    background-color: #FA6466;
+                    box-shadow: lightgray 10px 10px 20px;
+                    transition: .5s;
+                }
+            }
+            .filtreSelonType{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                .itemListeFiltresGaz{
+                    margin: 20px;
+                    width: 60%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    .btn-Filtres{
+                        display:none;
+                    }
+                    .label-btn-Filtres{
+                        margin: 10px;
+                        padding: 8px;
+                        border: 2px solid #FA6466;
+                        border-radius: 50px;
+                        cursor: pointer;
+                        transition: .5s;
+                    }
+                    .btn-Filtres:checked +.label-btn-Filtres{
+                        background-color: #FA6466;
+                        box-shadow: lightgray 10px 10px 20px;
+                        transition: .5s;
+                    }
+                }
+            }    
+        }
+        .listItemsConso{
+            margin: 20px;
+            display: flex;
+            select{
+                padding: 8px;
+                background-color: #ffffff;
+                border: 2px solid #FA6466;
+                border-radius: 50px;
+                width: 80px;
+                margin: 0px 10px 0px 10px;
+            }
+        }
+
+        h2 {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    }
+    .Element-container-PageClassement{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .fournisseur{
+            width: 60%;
+            margin: 14px 0px 14px 0px;
+            padding: 8px;
+            border: 2px solid #FA6466;
+            background-color: #fff2f2;
+            border-radius: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+
+            @media screen and (max-width: 650px) {
+                flex-direction: column;
+                width: 100%;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+                border-radius: 0px;
+                margin: 0;
+            }
+
+            .logoEntreprise{
+                width: 120px;
+                margin-top: 20%;
+                margin-bottom: 20%;
+
+                @media screen and (max-width: 768px)  {
+                    width: 50%;
+                    margin-top: 10%;
+                    margin-bottom: 15%;
+                }
+            }
+
+            h3 {
+                color:rgb(197, 55, 55);
+            }
+
+            .nameFournisseur {
+                align-self: flex-start;
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                display: inline-block;
+                margin-left: 4%;
+                margin-top: -4%;
+
+                @media screen and (max-width: 650px) {
+                    align-self: center;
+                    padding-top: 5%;
+                    margin-bottom: 4%;
+                }
+            }
+
+            .headerFournisseur{
+                margin-left: 4%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-right: 2px solid #FA6466;
+                padding-right: 8%;
+
+                @media screen and (max-width: 650px) {
+                    border-right: none;
+                }
+                
+
+                p {
+                    color: black;
+                    font-size: 1.5rem;
+                    margin-top: -5%;
+                }
+            }
+
+            .contentFournisseur {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .prixFournisseur{
+                display: flex;
+                align-items: center;
+                justify-content: space-around;
+                margin-top: -2%;
+                margin-left: 0;
+
+                p {
+                    font-size: 0.8rem;
+                    margin: 0 5px 0 5px;
+                }
+
+            }
+            .footerFournisseur{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-wrap: wrap;
+                margin-top: 5%;
+                
+
+                div {
+                    padding: 5px;
+                    border: 2px solid #FA6466;
+                    background-color: #FA6466 ;
+                    border-radius: 50px;
+                    margin: 5px 5px 5px 5px;
+
+                    @media screen and (max-width: 650px) {
+                        background-color: #fff2f2;
+                        border: none;
+                        font-size: 0;
+                    }
+                }
+            }
+        }
+    }
+    .Carrousel{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 150px;
+        .ItemCarousel{
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            margin: 10px;
+            background-color: gray;
+
+            @media screen and (max-width: 768px)  {
+                margin-top: 5%;
+            }
+        }
+        .pageActive{
+            background-color: #FA6466;
+
+            @media screen and (max-width: 768px)  {
+                margin-top: 5%;
+            }
+        }
+        .boutonSupprimer{
+            display: none;
+        }
+
+        .btn-Next {
+            @media screen and (min-width: 768px) and (max-width: 1024px) {
+                width : 250px;
+                padding: 7px;
+                margin-bottom: 25px;
+                margin-top: 20px;
+            }
+
+            @media screen and (min-width: 1024px) {
+                width : 300px;
+                padding: 7px;
+            }
+
+            @media screen and (max-width: 768px)  {
+                width : 200px;  
+                padding: 7px;
+                margin-bottom: 25px;
+                margin-top: 3%;
+            }
+        }
+    }
+}
+
+h5{
+    font-size: 15px;
+    font-weight: 900;
+    color: #000000;
+    margin-bottom: 10px;
+    text-align: center;
+
+    @media screen and (max-width: 768px)  {
+        font-size: 12px;
+        margin-bottom: 7px;
+    }
+}
+
+.btn-Elec, .btn-Gaz , .btn-Gaz-Elec{
+    display: none;
+}
+.label-btn-Elec, .label-btn-Gaz , .label-btn-Gaz-Elec
+{
+    display: block;
+    border: none;
+    border-radius: 10px;
+    object-fit: cover;
+    background-color: transparent;
+    width: 100%;
+    height: 300px;
+    background-position: -150px 0px;
+    background-size: cover;
+    cursor: pointer;
+}
+.label-btn-Elec{
+    background-image: url(../images/Elec.png);
+} 
+.label-btn-Gaz{
+    background-image: url(../images/Gaz.png);
+} 
+.label-btn-Gaz-Elec{
+    background-image: url(../images/ElecAndGaz.png);
+}
+.btn-Gaz:checked +.label-btn-Gaz, .btn-Elec:checked +.label-btn-Elec, .btn-Gaz-Elec:checked+.label-btn-Gaz-Elec
+{
+    border: darkred 3px solid;
+    box-shadow: red 0px 0px 20px;
+}
+.btn-Next
+{
+    width: 20%;
+    padding: 7px;
+}
+.option-Gaz-Elec , .option-Gaz, .option-Elec 
+{
+    width: 13%;
+    margin: 10px;
+}
+.input-email , .input-password, .input-checkbox
+{
+   margin: 10px;
+}
+
+.input-checkbox
+{
+    font-size: 30px;
+}
+
+

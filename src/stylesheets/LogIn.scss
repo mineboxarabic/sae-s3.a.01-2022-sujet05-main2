@@ -1,0 +1,273 @@
+
+
+.body-LogIn {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: 300% 300%;
+    background-image: linear-gradient(-45deg, rgba(255,238,212,1) 0%, rgba(255,190,136,1) 10%, rgba(255,73,73,1) 50%, rgba(255,190,136,1) 90%, rgba(255,238,212,1) 100%);
+    animation: AnimateBG 20s ease infinite;
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+        height: 126vh;
+        background-image: none;
+        background-color: rgb(240, 240, 240);
+    }
+  }
+  
+  @keyframes AnimateBG { 
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+
+    
+}
+
+.container
+{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(240, 240, 240);
+    box-shadow: rgb(77, 77, 77) 0px 10px 50px;
+    border: solid 1px;
+    border-color: rgba(77, 77, 77, 0.274);
+    flex-direction: column;
+    border-radius: 30px;
+    position: absolute;
+    top: 5%;
+    width: 650px;
+
+    @media screen and (max-width: 768px) {
+        width: 100%;
+        //height: 100%;
+        top: 0%;
+        border-radius: 0px;
+        box-shadow: none;
+        border: none;
+    }
+
+    .img-Logo
+    {
+    margin: 0 auto;
+    margin-bottom: 20px;
+    width: 282px;
+    height: 170px;  
+    position: relative;
+    left: 0%;
+    bottom: 5%;
+
+    }
+
+}
+
+
+.fadded-Text
+{   
+    align-self: center;
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: 20px;
+    color:black;
+
+    @media screen and (max-width: 768px) {
+        font-size: 1.2rem;
+    }
+}
+
+.form-group
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    //margin: 0 auto;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    width: 100%;
+
+    
+}
+
+form {
+    width: 100%;
+}
+
+::placeholder
+{
+    color: rgb(151, 148, 148);
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.input-label-conatiner
+{
+    display: flex;
+}
+
+.form-labels
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.form-inputs
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-submit-LogIn
+{
+    background-color: rgb(212, 68, 68);
+    color: white;
+    border: none;
+    font-size: 1rem;
+    font-weight: 300;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    margin: 0 auto;
+    margin-bottom: 20px;
+    border-radius: 30px;
+    height: 70px;
+    width: 90%;
+
+    @media screen and (max-width: 768px) {
+        height: 90px;
+        
+    }
+
+}
+
+
+a
+{
+    color:  rgb(212, 68, 68);
+    font-size: 20px;
+    text-decoration: none;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+a:hover
+{
+    color: rgb(133, 68, 68);
+    transition: 0.4s;
+}
+
+.noPassword
+{
+    font-size: 1rem;
+    position: relative;
+    left: 5%;
+}
+
+.register 
+{
+    font-size: 1rem;
+    position: relative;
+    left: 0%;
+}
+
+.field-email , .field-password, .field-password-confirm
+{
+    //margin-left: 7%;
+    margin: 1%;
+    height: 50px;
+    width: 100%;
+    align-self: center;
+    @media screen and (max-width: 768px) {
+        height: 70px;
+        width: 100%;
+        align-self: center;
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+}
+
+
+.btn-Back
+{
+    width: 22%;
+    position:relative;
+    align-self: flex-start;
+    border: none;
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: rgb(240, 240, 240);
+    color: rgb(212, 68, 68);
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: 200;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    @media screen and (max-width: 768px) {
+        height: 70px;
+    }
+}
+
+.btn-Back:hover
+{
+    font-size: 22px;
+    color: rgb(133, 68, 68);
+}
+
+.input-email, .input-password
+{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    font-size: 30px;
+    width: 90%;
+    label {
+        margin-left: 10px;
+        font-size: 1rem;
+    }
+}
+
+.input-checkbox
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    margin-right: 5%;
+    margin-left: 5%;
+
+    label {
+        font-size: 1rem;
+        margin-right: 5px;
+        margin-left: 8px;     
+    }
+
+    a {
+        font-size: 1rem; 
+        margin-right: 5px;
+        margin-left: 5px; 
+  
+    }
+
+
+    .field-checkbox
+    {
+        width: 25px;
+        height: 25px;
+        margin: 0;
+        accent-color: rgb(212, 68, 68);
+        border-radius: 200px;         
+    }
+}
+
+
+.forgot-password {
+    @media screen and (max-width: 768px) {
+        margin-right: 10px;
+    }
+}

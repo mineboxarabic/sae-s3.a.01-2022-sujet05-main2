@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Accueil.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Accueil.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Accueil.js
+ */
+
+import Logo from '../images/Logo.png';
+import '../stylesheets/Accueil.scss';
+import '../stylesheets/styles.scss';
+import { createRoot } from 'react-dom/client';
+import root from '../index.js';
+import fournisseurApi from '../fournisseur.json';
+import React from 'react';
+import logoEDF from "../images/logoCompany/EDF_logo.png";
+import logoEngie from "../images/logoCompany/Engie_logo.png";
+import logoENI from "../images/logoCompany/ENI_logo.png";
+import logoTotal from "../images/logoCompany/Total_logo.png";
+
+/**
+ * Class to create the main page that inherits from React.Component
+ */
+class Accueil extends React.Component {
+  /**
+   * Create the page
+   * @param {*} props A parameter that inherits from React.Component
+   */
+  constructor(props){
+    super(props)
+    this.state = {
+      idType: "gas",
+      numPage: 1,
+      TypeClient: [],
+      TypeClientSelectionner: "",
+      filtresSelectionner: [],
+      volumeConsoElec: 6,
+      volumeConsoGazSelectionner: []
+    }
+  }
+  /**
+   * This function takes the energy type id to get a filter array
+   * 
+   * @param {int} idType The energy type id 
+   * @returns {array} The filter array
+   */
+  ListeFiltre(idType){
+    var filtre = [];
+    for(let i = 0;i&lt;fournisseurApi.length;i++)
+      for(let j = 0;j&lt;fournisseurApi[i].offers.length;j++)
+        if(fournisseurApi[i].offers[j].energy_type ==  idType){
+          for(let k = 0;k&lt;fournisseurApi[i].offers[j].filters.length;k++)
+            if(!filtre.includes(fournisseurApi[i].offers[j].filters[k]))
+              filtre.push(fournisseurApi[i].offers[j].filters[k])
+          if(!this.state.TypeClient.includes(fournisseurApi[i].offers[j].client_type))
+            this.state.TypeClient.push(fournisseurApi[i].offers[j].client_type)
+        }
+    return(filtre)
+  }
+  /**
+   * 
+   * @param {double} volumeConso Value of the electricity consumption in kVA
+   * @param {double} prixOffre Value of the price of the offer per kVA
+   * @description This function calculate the price of an electricity offer for one year
+   * @returns {double} Price over one year 
+   */
+  calculPrixElec(volumeConso,prixOffre){
+    var prix = 0
+    if(volumeConso == 6)
+      prix = 2267 * prixOffre
+    else if(volumeConso == 9)
+      prix = 3649 * prixOffre
+    else if(volumeConso == 12)
+      prix = 5911 * prixOffre
+    else if(volumeConso == 15)
+      prix = 6973 * prixOffre
+    else if(volumeConso == 18)
+      prix = 10574 * prixOffre
+    else if(volumeConso == 24)
+      prix = 16315 * prixOffre
+    else if(volumeConso == 30)
+      prix = 18570 * prixOffre
+    else if(volumeConso == 36)
+      prix = 21894 * prixOffre
+    return prix
+  }
+  /**
+   * 
+   * @param {double} valeurConsoGaz Value of the gas consumption in kWh
+   * @param {double} prixOffre Value of the price of the offer per kWh
+   * @returns {double} Price over one year
+   * @description This function calculate the price of a gas offer for one year
+   */
+  calculPrixGaz(valeurConsoGaz,prixOffre){
+    return (prixOffre*valeurConsoGaz)
+  }
+  /**
+   * 
+   * @param {int} idType The energy type id 
+   * @param {string} TypeClientSelectionner The client type (pro/particular)
+   * @description Get every offers that respect the given filters with the coresponding price.
+   * @returns {array} A list of every offers
+   */
+  ListeFournisseurFiltrer(idType,TypeClientSelectionner){
+    if(this.state.idType == "gas" || this.state.idType == "dual"){
+      var valeurConsoGaz = 0
+      for(let i = 0;i&lt;this.state.volumeConsoGazSelectionner.length;i++)
+        valeurConsoGaz = valeurConsoGaz + this.state.volumeConsoGazSelectionner[i]
+      
+      var categorieGas;
+      if(valeurConsoGaz >= 0 &amp;&amp; valeurConsoGaz &lt;= 1000)
+        categorieGas = "0-1000"
+      else if(valeurConsoGaz >= 1001 &amp;&amp; valeurConsoGaz &lt;= 6000)
+        categorieGas = "1001-6000"
+      else if(valeurConsoGaz >= 6001 &amp;&amp; valeurConsoGaz &lt;= 30000)
+        categorieGas = "6001-30000"
+      else
+        categorieGas = "30001-300000"
+
+      console.log("Le gaz est " + valeurConsoGaz)
+    }
+
+    var fournisseurFiltrer = [];
+    for(let i = 0;i&lt;fournisseurApi.length;i++)
+      for(let j = 0;j&lt;fournisseurApi[i].offers.length;j++){
+
+        var modelFournisseur = {
+          entreprise: fournisseurApi[i].company,
+          nomOffre: fournisseurApi[i].offers[j].name,
+          isActive: fournisseurApi[i].offers[j].is_active,
+          subPrix: undefined,
+          prix: undefined,
+          filtres:fournisseurApi[i].offers[j].filters,
+        }
+
+        if(fournisseurApi[i].offers[j].energy_type ==  idType &amp;&amp; (TypeClientSelectionner == "" ? true : fournisseurApi[i].offers[j].client_type ==  TypeClientSelectionner)){
+          var verifFiltre = false
+          if(this.state.filtresSelectionner.length != 0){
+            var toutFiltresPresent = true
+            for(let k = 0;k&lt;this.state.filtresSelectionner.length;k++){
+              if(!fournisseurApi[i].offers[j].filters.includes(this.state.filtresSelectionner[k])){
+                toutFiltresPresent = false
+              }  
+            }
+            if(toutFiltresPresent){
+              verifFiltre = true
+            }
+          }else{
+            verifFiltre = true
+          }
+          for(let l = 0;l&lt;fournisseurApi[i].offers[j].prices.length;l++){
+            if(this.state.idType == "electricity"){
+              if(fournisseurApi[i].offers[j].prices[l].power == this.state.volumeConsoElec){
+                modelFournisseur.subPrix = fournisseurApi[i].offers[j].prices[l].subscription_price
+                modelFournisseur.prix = this.calculPrixElec(this.state.volumeConsoElec, fournisseurApi[i].offers[j].prices[l].price)
+              }
+            }else if(this.state.idType == "gas"){
+              if(fournisseurApi[i].offers[j].prices[l].consumption_class == categorieGas || fournisseurApi[i].offers[j].prices[l].consumption_class ==  "Unknown"){
+                modelFournisseur.subPrix = fournisseurApi[i].offers[j].prices[l].subscription_price
+                modelFournisseur.prix = this.calculPrixGaz(valeurConsoGaz, fournisseurApi[i].offers[j].prices[l].price)
+              }
+            }else{
+              if(fournisseurApi[i].offers[j].prices[l].power == this.state.volumeConsoElec){
+                modelFournisseur.subPrix = fournisseurApi[i].offers[j].prices[l].subscription_price
+                modelFournisseur.prix = this.calculPrixElec(this.state.volumeConsoElec, fournisseurApi[i].offers[j].prices[l].price)
+              }
+              if(fournisseurApi[i].offers[j].prices[l].consumption_class == categorieGas || fournisseurApi[i].offers[j].prices[l].consumption_class ==  "Unknown"){
+                modelFournisseur.subPrix = modelFournisseur.subPrix + fournisseurApi[i].offers[j].prices[l].subscription_price
+                modelFournisseur.prix = modelFournisseur.prix + this.calculPrixGaz(valeurConsoGaz, fournisseurApi[i].offers[j].prices[l].price)
+              }
+            }  
+          }
+          if(verifFiltre)
+            fournisseurFiltrer.push(modelFournisseur)
+        }
+      }
+    return(fournisseurFiltrer)
+  }
+  /**
+   * 
+   * @returns {div} The div containing the choose of energy type
+   * @description This function implements the div in which you can choose your energy type 
+   */
+  PageTypeClass() { 
+    return (
+      &lt;div className="Element-container-PageTypeClass">
+                &lt;div className="option-Gaz" value="Gaz">
+                    &lt;input className="btn-Gaz" type="radio" defaultChecked name="typeF" id="Gaz" value="GAZ" onInput={
+                      ()=>{
+                        this.state.idType="gas"
+                      }
+                    }/>
+                    &lt;label className="label-btn-Gaz" htmlFor="Gaz">&lt;/label>
+                    &lt;h5>Gaz&lt;/h5>
+                &lt;/div>
+                &lt;div className="option-Elec" value="Elec">
+                    &lt;input className="btn-Elec" type="radio" name="typeF" id="Elec" value="ELECTRICITE" onInput={
+                      ()=>{
+                        this.state.idType="electricity"
+                      }
+                    }/>
+                    &lt;label className="label-btn-Elec" htmlFor="Elec">&lt;/label>
+                    &lt;h5>Électricité&lt;/h5>
+                &lt;/div>
+                &lt;div className="option-Gaz-Elec" value="GazElec">
+                    &lt;input className="btn-Gaz-Elec" type="radio" name="typeF" id="Gaz-Elec" value="DUAL" onInput={
+                      ()=>{
+                        this.state.idType="dual"
+                      }
+                    }/>
+                    &lt;label className="label-btn-Gaz-Elec" htmlFor="Gaz-Elec">&lt;/label>
+                    &lt;h5>Gaz et Électricité&lt;/h5>
+                &lt;/div>
+            &lt;/div>
+    );
+  } 
+  /**
+   * 
+   * @param {int} idType The energy type of the offer
+   * @returns {div} The div containing all the choices for the filters
+   * @description This functions returns the div used for choosing the filters and your electricity meter value/ type of gas consommation depending on idType
+   */
+  PageFiltre(idType) {
+    this.state.filtresSelectionner = []
+    this.state.TypeClientSelectionner = ""
+    var filtres = this.ListeFiltre(idType)
+    filtres.sort();
+    const listItemsFiltres = filtres.map((filtre) =>
+      &lt;div key={filtre} className='itemListeFiltres'>
+        &lt;input id={filtre} className="btn-Filtres" type="checkbox" name={filtre} value={filtre} onClick={
+          ()=>{
+            if(this.state.filtresSelectionner.includes(filtre))
+              this.state.filtresSelectionner.slice(filtre)
+            else
+              this.state.filtresSelectionner.push(filtre)
+          }
+        }/>
+        &lt;label className="label-btn-Filtres" htmlFor={filtre}>{filtre}&lt;/label>
+      &lt;/div>
+    )
+
+    var filtreElec = 
+    &lt;div className='filtreSelonType'>
+        &lt;h2>Quelle est la puissance de votre compteur ?&lt;/h2>
+        &lt;div className='listItemsConso'>
+            &lt;select id='volumeElec'>
+              &lt;option value="6">6 kVA&lt;/option>
+              &lt;option value="9">9 kVA&lt;/option>
+              &lt;option value="12">12 kVA&lt;/option>
+              &lt;option value="15">15 kVA&lt;/option>
+              &lt;option value="18">18 kVA&lt;/option>
+              &lt;option value="24">24 kVA&lt;/option>
+              &lt;option value="30">30 kVA&lt;/option>
+              &lt;option value="36">36 kVA&lt;/option>
+            &lt;/select>
+        &lt;/div>
+      &lt;/div>
+
+    var filtreGaz = 
+    &lt;div className='filtreSelonType'>
+        &lt;h2>Quel type de consommation de gaz utilisé-vous ?&lt;/h2>
+        &lt;div key="Cuisine" className='itemListeFiltresGaz'>
+          &lt;input id="Cuisine" className="btn-Filtres" type="checkbox" name="Cuisine" value="Cuisine" onClick={
+            ()=>{
+              if(this.state.volumeConsoGazSelectionner.includes(660))
+                this.state.volumeConsoGazSelectionner.splice(this.state.volumeConsoGazSelectionner.indexOf(660),1)
+              else
+                this.state.volumeConsoGazSelectionner.push(660)
+            }
+          }/>
+          &lt;label className="label-btn-Filtres" htmlFor="Cuisine">Cuisine ≈ 660kWh&lt;/label>
+          &lt;input id="EauChaude" className="btn-Filtres" type="checkbox" name="EauChaude" value="EauChaude" onClick={
+            ()=>{
+              if(this.state.volumeConsoGazSelectionner.includes(3100))
+                this.state.volumeConsoGazSelectionner.splice(this.state.volumeConsoGazSelectionner.indexOf(3100),1)
+              else
+                this.state.volumeConsoGazSelectionner.push(3100)
+            }
+          }/>
+          &lt;label className="label-btn-Filtres" htmlFor="EauChaude">Eau Chaude ≈ 3100kWh&lt;/label>
+          &lt;input id="Chauffage-200" className="btn-Filtres" type="checkbox" name="Chauffage-200" value="Chauffage-200" onClick={
+            ()=>{
+              if(this.state.volumeConsoGazSelectionner.includes(17000))
+                this.state.volumeConsoGazSelectionner.splice(this.state.volumeConsoGazSelectionner.indexOf(17000),1)
+              else
+                this.state.volumeConsoGazSelectionner.push(17000)
+            }
+          }/>
+          &lt;label className="label-btn-Filtres" htmlFor="Chauffage-200">Chauffage -200m² ≈ 17000kWh&lt;/label>
+          &lt;input id="Chauffage+200" className="btn-Filtres" type="checkbox" name="Chauffage+200" value="Chauffage+200" onClick={
+            ()=>{
+              if(this.state.volumeConsoGazSelectionner.includes(64300))
+                this.state.volumeConsoGazSelectionner.splice(this.state.volumeConsoGazSelectionner.indexOf(64300),1)
+              else
+                this.state.volumeConsoGazSelectionner.push(64300)
+            }
+          }/>
+          &lt;label className="label-btn-Filtres" htmlFor="Chauffage+200">Chauffage +200m² ≈ 64300kWh&lt;/label>
+        &lt;/div>
+      &lt;/div>
+
+    var filtreType
+    if(this.state.idType == "electricity")
+      filtreType = filtreElec
+    else if(this.state.idType == "gas")
+      filtreType = filtreGaz
+    else
+      filtreType = &lt;div>
+        {filtreElec}
+        {filtreGaz}
+      &lt;/div>
+
+    return (
+      &lt;div className='Element-container-PageFiltre'>
+        &lt;h2>Recherchez-vous des fournisseurs pour un :&lt;/h2>
+        &lt;div className='listItemsClientsType'>
+          &lt;div key="LesDeux" className='itemListeclients'>
+            &lt;input className="btn-clients" type="radio" name="typeClient" defaultChecked id="LesDeux" value="LesDeux" onInput={
+                          ()=>{
+                            this.state.TypeClientSelectionner= "";
+                          }
+                        }/>
+            &lt;label className="label-btn-clients" htmlFor="LesDeux">Les deux&lt;/label>
+          &lt;/div>
+          &lt;div key="Particulier" className='itemListeclients'>
+            &lt;input className="btn-clients" type="radio" name="typeClient" id="Particulier" value="Particulier" onInput={
+                          ()=>{
+                            this.state.TypeClientSelectionner="Particulier"
+                          }
+                        }/>
+            &lt;label className="label-btn-clients" htmlFor="Particulier">Particulier&lt;/label>
+          &lt;/div>
+          &lt;div key="Professionnel" className='itemListeclients'>
+            &lt;input className="btn-clients" type="radio" name="typeClient" id="Professionnel" value="Professionnel" onInput={
+                          ()=>{
+                            this.state.TypeClientSelectionner="Professionnel"
+                          }
+                        }/>
+            &lt;label className="label-btn-clients" htmlFor="Professionnel">Professionnel&lt;/label>
+          &lt;/div>
+        &lt;/div>
+        &lt;h2>Sélectionnez les filtres recherchés.&lt;/h2>
+        &lt;div className='listItemsFiltres'>
+          {listItemsFiltres}
+        &lt;/div>
+        &lt;div className='listItemsFiltres'>
+          {filtreType}
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+  /**
+   * 
+   * @returns {div} The div containing the classement
+   * @description This function returns the div containing the offers 
+   */
+  PageClassement() {
+    const informationFournisseur = {
+      EDF: {
+        logo: logoEDF,
+        lien: "https://www.edf.fr/"
+      },
+      Engie: {
+        logo: logoEngie,
+        lien: "https://www.engie.com/"
+      },
+      Eni: {
+        logo: logoENI,
+        lien: "https://fr.eni.com"
+      },
+      TotalEnergies: {
+        logo: logoTotal,
+        lien: "https://www.totalenergies.fr/"
+      }
+    }
+
+    const fournisseurs = this.ListeFournisseurFiltrer(this.state.idType,this.state.TypeClientSelectionner)
+    fournisseurs.sort(function (a, b) {
+      return (a.prix+a.subPrix) - (b.prix+b.subPrix);
+    });
+    
+    var fournisseursInactif = []
+    var copieFournisseurs = fournisseurs
+
+    for(let i = 0;i&lt;fournisseurs.length;i++){
+      if(!copieFournisseurs[i].isActive){
+        var temp = fournisseurs[0]
+        fournisseurs.shift()
+        fournisseursInactif.push(temp)
+      }
+    }
+
+    var listFournisseurs;
+    if(fournisseurs.length != 0 ){
+      listFournisseurs = fournisseurs.map((fournisseur) => 
+      &lt;div className='fournisseur'>
+      &lt;div className='headerFournisseur'>
+        &lt;img className='logoEntreprise' src={informationFournisseur[fournisseur.entreprise].logo} alt="Logo" />
+        &lt;p>{(fournisseur.prix + fournisseur.subPrix).toFixed(2)}€/An&lt;/p>
+        &lt;a href={informationFournisseur[fournisseur.entreprise].lien} target="_blank">Voir le site&lt;/a>
+      &lt;/div>
+      &lt;div className='contentFournisseur'>
+        &lt;div className='nameFournisseur'>
+          &lt;h3>{fournisseur.nomOffre}&lt;/h3>
+        &lt;/div> 
+        &lt;div className='prixFournisseur'>
+          &lt;p>&lt;strong>Prix mensuel:&lt;/strong> {(fournisseur.prix/12).toFixed(2)}€/mois&lt;/p>
+          &lt;p>&lt;strong>Abonnement: &lt;/strong>{ fournisseur.subPrix == null ? 0  : (fournisseur.subPrix).toFixed(2)}€&lt;/p>
+        &lt;/div>
+        &lt;div className='footerFournisseur'>
+          {fournisseur.filtres.map( filtre =>
+            &lt;div className='divFiltre'>{filtre}&lt;/div>
+          )}
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+      )
+    }else{
+      listFournisseurs = &lt;p>Il semblerait qu'aucun fournisseur d'énergie ne propose d'offre pour vos critères !&lt;/p>
+    }
+    
+    return (
+      &lt;div className='Element-container-PageClassement'>
+        {listFournisseurs}
+      &lt;/div>
+    );
+  }
+  /**
+   * 
+   * @returns {div} Div containing the whole page 
+   * @description This functions implements all the divs necessary for the main page 
+   */
+  render() { 
+    return (
+      &lt;div className="container-Accueil">
+        &lt;div className ="Upper-Bar"> 
+            &lt;div className="Upper-Bar-Button">
+              &lt;button onClick={
+                  function (){
+                    import('../scripts/LogIn.js').then(LogIn => {
+                      root.render(&lt;LogIn.default />);
+                    });
+                  }
+                }
+                className="btn-Login" type = 'button'>Se connecter&lt;/button>
+              &lt;button onClick={
+                function (){
+                  import('./Register.js').then(Register => {
+                    root.render(&lt;Register.default />);
+                  });
+                }
+              }
+            className="btn-Register" type = 'button'>Créer un compte&lt;/button>
+          &lt;/div>
+          &lt;img src= {Logo} alt="Logo" className="img-Logo" />
+        &lt;/div>
+        &lt;div className ="Middle-Bar">
+              &lt;div className='Presentation'>
+                &lt;h2>Qui sommes-nous ?&lt;/h2>
+                &lt;p className='description'>HUSKY est une entreprise spécialisée dans le comparateur de fournisseurs d'énergie. L'entreprise a pour mission de permettre aux consommateurs de trouver le meilleur fournisseur d'énergie en fonction de leurs besoins et de leur budget. Pour cela, HUSKY compare les tarifs et les offres de différents fournisseurs d'énergie afin de proposer aux utilisateurs les options les plus avantageuses. En utilisant les outils et les services de HUSKY, les consommateurs peuvent non seulement économiser de l'argent sur leur facture d'énergie, mais aussi contribuer à la transition énergétique en optant pour des sources d'énergie renouvelables.&lt;/p>
+              &lt;/div>
+        &lt;/div>
+        &lt;div className="Lower-Bar">
+            &lt;div id="Element-container"> 
+              {this.PageTypeClass()}
+            &lt;/div>
+            &lt;div className='Carrousel'>
+              &lt;button id="boutonPrecedent" onClick={
+                    ()=>{
+                        const buttonPrecedent = document.getElementById("boutonPrecedent");
+                        const buttonSuivant = document.getElementById("boutonSuivant");
+                        const ItemCarouselPage1 = document.getElementById("ItemCarouselPage1");
+                        const ItemCarouselPage2 = document.getElementById("ItemCarouselPage2");
+                        const ItemCarouselPage3 = document.getElementById("ItemCarouselPage3");
+                        buttonSuivant.classList.remove('boutonSupprimer')
+                        if(this.state.numPage!=1){
+                          buttonPrecedent.classList.remove('boutonSupprimer')
+                          this.state.numPage--
+                          const rootElement = document.getElementById("Element-container");
+                          const rootContainer = createRoot(rootElement);
+                          if(this.state.numPage==2){
+                            this.state.volumeConsoGazSelectionner = []
+                            ItemCarouselPage3.classList.remove('pageActive')
+                            ItemCarouselPage2.classList.add('pageActive')
+                            rootContainer.render(this.PageFiltre(this.state.idType))
+                          }
+                          else if(this.state.numPage==1){
+                            ItemCarouselPage2.classList.remove('pageActive')
+                            ItemCarouselPage1.classList.add('pageActive')
+                            buttonPrecedent.classList.add('boutonSupprimer')
+                            this.state.idType="gas"
+                            rootContainer.render(this.PageTypeClass())
+                          }
+                        }
+                    }
+                  }
+                className="btn-Next boutonSupprimer" type = 'button'>Précédent&lt;/button>
+              &lt;div id="ItemCarouselPage1" className='ItemCarousel pageActive'>&lt;/div>
+              &lt;div id="ItemCarouselPage2" className='ItemCarousel'>&lt;/div>
+              &lt;div id="ItemCarouselPage3" className='ItemCarousel'>&lt;/div>
+              &lt;button id="boutonSuivant" onClick={
+                    () =>{
+                        const buttonPrecedent = document.getElementById("boutonPrecedent");
+                        const buttonSuivant = document.getElementById("boutonSuivant");
+                        const ItemCarouselPage1 = document.getElementById("ItemCarouselPage1");
+                        const ItemCarouselPage2 = document.getElementById("ItemCarouselPage2");
+                        const ItemCarouselPage3 = document.getElementById("ItemCarouselPage3");
+                        buttonPrecedent.classList.remove('boutonSupprimer')
+                        if(this.state.numPage!=3){
+                          this.state.numPage++
+                          const rootElement = document.getElementById("Element-container");
+                          const rootContainer = createRoot(rootElement);
+                          if(this.state.numPage==2){
+                            ItemCarouselPage1.classList.remove('pageActive')
+                            ItemCarouselPage2.classList.add('pageActive')
+                            rootContainer.render(this.PageFiltre(this.state.idType))
+                          }else if(this.state.numPage==3){
+                            ItemCarouselPage2.classList.remove('pageActive')
+                            ItemCarouselPage3.classList.add('pageActive')
+                            buttonSuivant.classList.add('boutonSupprimer')
+                            if(this.state.idType == "electricity" || this.state.idType == "dual")
+                              this.state.volumeConsoElec = document.getElementById("volumeElec").value
+                            rootContainer.render(this.PageClassement())
+                          }
+                        }
+                    }
+                  }
+                className="btn-Next" type = 'button'>Suivant&lt;/button>
+            &lt;/div>
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+}
+
+export default Accueil;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accueil.html">Accueil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#LogIn">LogIn</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#showError">showError</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Jan 09 2023 20:40:52 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

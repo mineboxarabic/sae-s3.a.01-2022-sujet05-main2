@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: LogIn.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: LogIn.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file LogIn.js
+ */
+
+import Logo from '../images/Logo.png'
+import root from '../index.js';
+import '../stylesheets/LogIn.scss'
+import Accueil from './Accueil.js';
+
+
+/**
+ * 
+ * @description Display an error message if the user's mail or password is wrong
+ * @returns {void} Error
+ */
+function showError() {
+    let container = document.querySelector('.error-container');
+    container.innerHTML = "";
+    let error = document.createElement('p');
+    error.className = "error";
+    error.innerHTML = "Wrong email or password";
+    container.appendChild(error);
+    error.style.display = "block";
+    error.style.backgroundColor = "rgba(212, 68, 68,0.9)";
+    error.style.fontSize = "1.5rem";
+    error.style.borderRadius = "5px";
+}
+/**
+ * 
+ * @returns {JSX.Element} The LogIn page
+ * @description This function creates the div containing all the information needed to log in
+ */
+function LogIn() {
+        return (
+            &lt;div className="body-LogIn">
+                &lt;div className="container">
+                    &lt;button onClick={
+                        function (){
+                            import('./Accueil.js').then(Accueil => {
+                                root.render(&lt;Accueil.default />);
+                            });
+                        }
+                    } className="btn-Back" type = 'button'>Retour&lt;/button>
+                    &lt;img src={Logo} alt = "Logo" className="img-Logo"/>
+                    &lt;h3 className = "fadded-Text">Se connecter&lt;/h3>
+                    &lt;div className='error-container'>&lt;/div>
+                    &lt;form>
+                        &lt;div className="form-group">
+                            &lt;div className="input-email">
+                                &lt;input type="email" className="field-email" id="email" placeholder="Email"/>
+                            &lt;/div>
+                            &lt;div className="input-password">
+                                &lt;input type="password" className="field-password" id="password" placeholder="Mot de passe"/>
+                            &lt;/div>
+                            &lt;div className="input-checkbox">
+                                &lt;input type="checkbox" className="field-checkbox" id="checkbox"/>
+                                &lt;label htmlFor="checkbox">Se souvenir de moi&lt;/label>
+                                &lt;a className="forgot-password">Mot de passe oublié ?&lt;/a>
+                            &lt;/div> 
+
+
+
+                            &lt;button onClick={
+                                async function (){
+                                    let email = document.querySelector('.field-email').value;
+                                    let password = document.querySelector('.field-password').value;
+                                    let response = await fetch('http://localhost:3001/login', {
+                                        method: 'POST',
+                                       
+                                        body: JSON.stringify({
+                                            email: email,
+                                            password: password
+                                        }),
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        }
+                                    });
+                                    let data = await response.json();
+                                    console.log(data);
+                                    if(data === false){
+                                        showError();
+                                    }
+                                    else{
+                                        import('./Accueil.js').then(Accueil => {
+                                            root.render(&lt;Accueil.default />);
+                                        });
+                                    }
+                                       
+                                }
+                            } type='button' className="btn-submit-LogIn">Se connecter&lt;/button>
+
+
+                            &lt;p className = "noPassword">Pas encore membre ? &lt;a onClick={
+                                function (){
+                                import('./Register.js').then(Register => {
+                                    root.render(&lt;Register.default />);
+                                });
+                                }
+                            } className="register">Créer un compte&lt;/a>&lt;/p>
+                        &lt;/div>
+                    &lt;/form>
+                &lt;/div>
+            &lt;/div>
+                 
+        );
+}
+export default LogIn;
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Accueil.html">Accueil</a></li></ul><h3>Global</h3><ul><li><a href="global.html#LogIn">LogIn</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#showError">showError</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Jan 09 2023 20:40:52 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
